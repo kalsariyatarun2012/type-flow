@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeFlow — Typing Speed Test</title>
+  <meta name="description"
+    content="TypeFlow is a modern, minimalist typing speed test. Measure your WPM and accuracy with beautiful real-time feedback." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header id="site-header">
+    <div class="header-inner">
+      <a href="#" class="logo" id="logo-btn">
+        <span class="logo-icon">⌨</span>
+        <span class="logo-text">TypeFlow</span>
+      </a>
+
+      <!-- Mode options bar -->
+      <nav class="options-bar" id="options-bar">
+        <div class="option-group" id="modifier-group">
+          <button class="opt-btn" id="opt-punctuation" data-modifier="punctuation">
+            <span class="opt-icon">@</span> punctuation
+          </button>
+          <button class="opt-btn" id="opt-numbers" data-modifier="numbers">
+            <span class="opt-icon">#</span> numbers
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="option-group" id="mode-group">
+          <button class="opt-btn active" id="opt-time" data-mode="time">
+            <span class="opt-icon">⏱</span> time
+          </button>
+          <button class="opt-btn" id="opt-words" data-mode="words">
+            <span class="opt-icon">A</span> words
+          </button>
+          <button class="opt-btn" id="opt-quote" data-mode="quote">
+            <span class="opt-icon">❝</span> quote
+          </button>
+          <button class="opt-btn" id="opt-zen" data-mode="zen">
+            <span class="opt-icon">△</span> zen
+          </button>
+          <button class="opt-btn" id="opt-paragraph" data-mode="paragraph">
+            <span class="opt-icon">¶</span> paragraph
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Time selector -->
+        <div class="option-group" id="time-selector">
+          <button class="time-btn" id="time-15" data-time="15">15</button>
+          <button class="time-btn active" id="time-30" data-time="30">30</button>
+          <button class="time-btn" id="time-60" data-time="60">60</button>
+          <button class="time-btn" id="time-120" data-time="120">120</button>
+          <button class="time-btn custom-time-btn" id="time-custom" title="Set custom duration">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+              aria-hidden="true">
+              <!-- Clock circle -->
+              <path
+                d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
+              <!-- Clock hands -->
+              <path d="M12.5 7a.5.5 0 0 0-1 0v5.25l3.25 1.95a.5.5 0 0 0 .5-.866L12.5 11.574V7z" />
+              <!-- Small arrow at ~7 o'clock position -->
+              <path
+                d="M7.05 15.05a.75.75 0 0 1 0-1.06l1.5-1.5a.75.75 0 1 1 1.06 1.06l-.22.22h2.36a.75.75 0 0 1 0 1.5H9.39l.22.22a.75.75 0 1 1-1.06 1.06l-1.5-1.5z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Word count selector (hidden by default) -->
+        <div class="option-group hidden" id="word-selector">
+          <button class="time-btn" id="words-10" data-words="10">10</button>
+          <button class="time-btn active" id="words-25" data-words="25">25</button>
+          <button class="time-btn" id="words-50" data-words="50">50</button>
+          <button class="time-btn" id="words-100" data-words="100">100</button>
+        </div>
+      </nav>
+
+      <div class="header-right">
+        <button class="icon-btn" id="theme-btn" title="Toggle theme" aria-label="Toggle theme">☀</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main id="main-content">
+
+    <!-- ===== TEST SCREEN ===== -->
+    <section id="test-screen" class="screen active">
+      <!-- Live stats bar -->
+      <div class="live-stats" id="live-stats">
+        <div class="stat-item">
+          <span class="stat-label">wpm</span>
+          <span class="stat-value" id="live-wpm">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">acc</span>
+          <span class="stat-value" id="live-acc">—</span>
+        </div>
+      </div>
+
+      <!-- Timer / word count display -->
+      <div class="timer-display" id="timer-display">
+        <span id="timer-value">30</span>
+      </div>
+
+      <!-- Typing area wrapper -->
+      <div class="test-wrapper" id="test-wrapper">
+        <!-- Language tag -->
+        <div class="lang-tag" id="lang-tag">
+          <span>🌐</span> english
+        </div>
+
+        <!-- Words container -->
+        <div class="words-container" id="words-container" tabindex="0" role="textbox" aria-label="Typing test area">
+          <!-- Words generated by JS -->
+        </div>
+
+        <!-- Caret (blinking cursor) -->
+        <div class="caret" id="caret"></div>
+
+        <!-- Hidden input to capture keystrokes -->
+        <input type="text" id="hidden-input" class="hidden-input" autocomplete="off" autocorrect="off"
+          autocapitalize="off" spellcheck="false" aria-hidden="true" />
+      </div>
+
+      <!-- Control buttons -->
+      <div class="test-controls" id="test-controls">
+        <button class="ctrl-btn" id="restart-btn" title="Restart test (Tab + Enter)" aria-label="Restart test">
+          <span class="ctrl-icon">↺</span>
+          <span class="ctrl-label">restart</span>
+        </button>
+        <div class="hint-text" id="hint-text">
+          <kbd>Tab</kbd> + <kbd>Enter</kbd> to restart &nbsp;|&nbsp; start typing to begin
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RESULTS SCREEN ===== -->
+    <section id="result-screen" class="screen">
+      <div class="result-header">
+        <span class="result-title">test complete</span>
+      </div>
+
+      <div class="result-layout">
+        <!-- Left Column: Stats -->
+        <div class="result-stats-col">
+          <!-- Primary stats -->
+          <div class="result-card primary">
+            <div class="result-metric">
+              <span class="metric-label">wpm</span>
+              <span class="metric-value" id="result-wpm">0</span>
+            </div>
+            <div class="result-metric">
+              <span class="metric-label">accuracy</span>
+              <span class="metric-value pct" id="result-acc">0%</span>
+            </div>
+          </div>
+
+          <!-- Secondary stats -->
+          <div class="result-card secondary">
+            <div class="result-row">
+              <span class="row-label">raw wpm</span>
+              <span class="row-value" id="result-raw">0</span>
+            </div>
+            <div class="result-row">
+              <span class="row-label">characters</span>
+              <span class="row-value chars" id="result-chars">0/0/0/0</span>
+            </div>
+            <div class="result-row">
+              <span class="row-label">time</span>
+              <span class="row-value" id="result-time">0s</span>
+            </div>
+            <div class="result-row">
+              <span class="row-label">mode</span>
+              <span class="row-value" id="result-mode">time — 30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Graph -->
+        <div class="result-graph-col">
+          <div class="graph-header">
+            <span class="row-label">Performance Analysis</span>
+            <div class="graph-controls">
+              <button class="icon-btn" id="zoom-out-btn" title="Zoom Out">−</button>
+              <button class="icon-btn" id="zoom-in-btn" title="Zoom In">+</button>
+            </div>
+          </div>
+          <div class="graph-section" id="graph-container">
+            <div class="graph-scroll-area" style="position: relative;">
+              <canvas id="wpm-graph"></canvas>
+              <div id="graph-tooltip" class="graph-tooltip hidden">
+                <div class="tooltip-time" id="tt-time">0</div>
+                <div class="tooltip-row">
+                  <span class="tt-swatch" style="background: var(--danger)"></span>
+                  errors: <span id="tt-errors">0</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tt-swatch" style="background: var(--accent)"></span>
+                  wpm: <span id="tt-wpm">0</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tt-swatch" style="background: var(--text-muted)"></span>
+                  raw: <span id="tt-raw">0</span>
+                </div>
+                <div class="tooltip-row">
+                  <span class="tt-swatch" style="background: var(--surface-2)"></span>
+                  burst: <span id="tt-burst">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result actions -->
+      <div class="result-actions">
+        <button class="action-btn primary-action" id="retry-btn">
+          <span>↺</span> Try Again
+        </button>
+        <button class="action-btn" id="new-test-btn">
+          <span>→</span> New Test
+        </button>
+      </div>
+
+      <!-- Motivational message -->
+      <p class="motivational" id="motivational-msg"></p>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="site-footer">
+    <div class="footer-inner">
+      <span class="footer-link">TypeFlow v1.0</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-link">Press <kbd>Tab</kbd> + <kbd>Enter</kbd> to restart</span>
+    </div>
+  </footer>
+
+  <!-- ===== NOTIFICATION TOAST ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== CUSTOM TIME MODAL ===== -->
+  <div class="modal-overlay" id="custom-time-overlay" aria-modal="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal" id="custom-time-modal">
+      <h2 class="modal-title" id="modal-title">Test Duration</h2>
+
+      <div class="modal-current" id="modal-current-label">30 seconds</div>
+
+      <input type="text" id="custom-time-input" class="modal-input" placeholder="e.g. 30  |  1h30m  |  45m"
+        maxlength="10" autocomplete="off" spellcheck="false" />
+      <div class="modal-error" id="modal-error"></div>
+
+      <p class="modal-hint">
+        Use <strong>"h"</strong> for hours and <strong>"m"</strong> for minutes.<br>
+        Examples: <code>30</code> &nbsp;·&nbsp; <code>1h</code> &nbsp;·&nbsp; <code>2h30m</code> &nbsp;·&nbsp;
+        <code>45m</code><br>
+        Maximum duration: <strong>23h 59m</strong> (86,340 seconds).
+      </p>
+
+      <div class="modal-actions">
+        <button class="modal-cancel" id="modal-cancel-btn">cancel</button>
+        <button class="modal-apply" id="modal-apply-btn">apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PARAGRAPH CONFIRMATION MODAL ===== -->
+  <div class="modal-overlay" id="paragraph-confirm-overlay" aria-modal="true" role="dialog"
+    aria-labelledby="para-modal-title">
+    <div class="modal" id="paragraph-confirm-modal">
+      <h2 class="modal-title" id="para-modal-title">⏳ Paragraph Mode</h2>
+
+      <p class="para-confirm-msg">
+        Paragraph mode has no time limit. You will not be able to see results without completing the whole paragraph
+        given. It may take more than <strong>10 minutes</strong> to complete the given paragraph.
+      </p>
+
+      <div class="modal-actions para-confirm-actions">
+        <button class="modal-cancel" id="para-cancel-btn">Cancel</button>
+        <button class="modal-apply" id="para-proceed-btn">Proceed Forward</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
